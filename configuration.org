@@ -1,0 +1,158 @@
+#+TITLE: Emacs configuration
+
+** Required Packages
+
+#+BEGIN_SRC emacs-lisp
+  (require 'package)
+  (require 'use-package)
+  (add-to-list 'load-path "~/.emacs.d/lisp/")
+  (require 'tsi)
+  (require 'tsi-css)
+  (require 'tsi-json)
+  (require 'tsi-typescript)
+#+END_SRC
+
+** Package Archives
+
+#+BEGIN_SRC emacs-lisp
+    (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+    ;; Comment/uncomment this line to enable MELPA Stable if desired.  See `package-archive-priorities`
+    ;; and `package-pinned-packages`. Most users will not need or want to do this.
+    (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+    (package-initialize)
+#+END_SRC
+
+** Custom Variables
+
+*** Org mode shift select
+
+#+BEGIN_SRC emacs-lisp
+    (setq org-suppor-shift-select t)
+#+END_SRC
+
+*** Generated customizations
+
+#+BEGIN_SRC emacs-lisp
+  (custom-set-variables
+   ;; custom-set-variables was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(ansi-color-faces-vector
+     [default default default italic underline success warning error])
+   '(custom-enabled-themes '(nord))
+   '(custom-safe-themes
+     '("37768a79b479684b0756dec7c0fc7652082910c37d8863c35b702db3f16000f8" default))
+   '(indent-tabs-mode nil)
+   '(menu-bar-mode t)
+   '(package-selected-packages
+     '(quelpa tree-sitter-langs tree-sitter typescript-mode python-mode anaconda-mode lsp-haskell haskell-mode clojure-mode yasnippet-snippets nord-theme))
+   '(tab-always-indent t)
+   '(tool-bar-mode t)
+   '(warning-suppress-types '((comp) (comp) (comp) (comp))))
+  (custom-set-faces
+   ;; custom-set-faces was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   )
+  (when (version<= "26.0.50" emacs-version)
+    (global-display-line-numbers-mode))
+  ;; Backup directory-file-name
+  (setq
+   backup-by-copying t      ; don't clobber symlinks
+   backup-directory-alist
+   '(("." . "~/Temp/backup/"))    ; don't litter my fs tree
+   delete-old-versions t
+   kept-new-versions 6
+   kept-old-versions 2
+   version-control t)       ; use versioned backups
+#+END_SRC
+
+
+
+** Yasnippet configuration
+#+BEGIN_SRC emacs-lisp
+  (require 'yasnippet)
+  (yas-global-mode 1)
+#+END_SRC
+
+
+** Autocomplete
+
+#+begin_src emacs-lisp
+  (use-package auto-complete
+    :ensure t
+    :init
+    (progn
+      (ac-config-default)
+      (global-auto-complete-mode t)
+      ))  
+#+end_src
+
+
+** Programming Languages
+
+*** C/C++ Configurations
+#+begin_src emacs-lisp
+  (use-package modern-cpp-font-lock
+    :ensure t)
+#+end_src
+
+
+*** Haskell Configurations
+#+begin_src emacs-lisp
+  ;;haskell-mode
+  (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
+
+  ;; hslint on the command line only likes this indentation mode;
+  ;; alternatives commented out below.
+  (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+  ;;(add-hook 'haskell-mode-hook 'turn-on-haskell-indent)
+  ;;(add-hook 'haskell-mode-hook 'turn-on-haskell-simple-indent)
+
+  ;; Ignore compiled Haskell files in filename completions
+  (add-to-list 'completion-ignored-extensions ".hi")
+#+end_src
+
+*** Typescript Configurations
+
+#+begin_src emacs-lisp
+  (use-package tree-sitter
+    :ensure 
+    :config
+    ;; activate tree-sitter on any buffer containing code for which it has a parser available
+    (global-tree-sitter-mode)
+    ;; you can easily see the difference tree-sitter-hl-mode makes for python, ts or tsx
+    ;; by switching on and off
+    (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+
+  (use-package tree-sitter-langs
+    :ensure t
+    :after tree-sitter)
+
+  (use-package typescript-mode
+    :after tree-sitter
+    :config
+    ;; we choose this instead of tsx-mode so that eglot can automatically figure out language for server
+    ;; see https://github.com/joaotavora/eglot/issues/624 and https://github.com/joaotavora/eglot#handling-quirky-servers
+    (define-derived-mode typescriptreact-mode typescript-mode
+      "TypeScript TSX")
+
+    ;; use our derived mode for tsx files
+    (add-to-list 'auto-mode-alist '("\\.tsx?\\'" . typescriptreact-mode))
+    ;; by default, typescript-mode is mapped to the treesitter typescript parser
+    ;; use our derived mode to map both .tsx AND .ts -> typescriptreact-mode -> treesitter tsx
+    (add-to-list 'tree-sitter-major-mode-language-alist '(typescriptreact-mode . tsx)))
+
+  (use-package tsi
+    :after tree-sitter
+    ;; define autoload definitions which when actually invoked will cause package to be loaded
+    :commands (tsi-typescript-mode tsi-json-mode tsi-css-mode)
+    :init
+    (add-hook 'typescript-mode-hook (lambda () (tsi-typescript-mode 1)))
+    (add-hook 'json-mode-hook (lambda () (tsi-json-mode 1)))
+    (add-hook 'css-mode-hook (lambda () (tsi-css-mode 1)))
+    (add-hook 'scss-mode-hook (lambda () (tsi-scss-mode 1))))
+#+end_src
+
