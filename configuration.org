@@ -1,5 +1,35 @@
 #+TITLE: Emacs configuration
 
+** Install missing packages
+
+#+BEGIN_SRC emacs-lisp
+  (setq package-archives
+	'(("melpa" . "https://melpa.org/packages/")
+	  ("melpa-stable" . "https://stable.melpa.org/packages/")
+	  ("gnu" . "https://elpa.gnu.org/packages/")))
+  (require 'package)
+  (package-initialize)
+  (setq install-packages
+	'(quelpa
+	  tree-sitter-langs
+	  tree-sitter
+	  typescript-mode
+	  python-mode
+	  anaconda-mode
+	  lsp-haskell
+	  haskell-mode
+	  clojure-mode
+	  yasnippet-snippets
+	  cider
+	  nord-theme))
+  (unless package-archive-contents
+    (package-refresh-contents))
+  (dolist (pkg install-packages)
+    (unless (package-installed-p pkg)
+      (package-install pkg)))
+#+END_SRC
+
+
 ** Required Packages
 
 #+BEGIN_SRC emacs-lisp
@@ -12,15 +42,9 @@
   (require 'tsi-typescript)
 #+END_SRC
 
-** Package Archives
 
-#+BEGIN_SRC emacs-lisp
-    (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-    ;; Comment/uncomment this line to enable MELPA Stable if desired.  See `package-archive-priorities`
-    ;; and `package-pinned-packages`. Most users will not need or want to do this.
-    (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
-    (package-initialize)
-#+END_SRC
+
+
 
 ** Custom Variables
 
