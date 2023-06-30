@@ -3,43 +3,49 @@
 ** Install missing packages
 
 #+BEGIN_SRC emacs-lisp
-  (setq package-archives
-	'(("melpa" . "https://melpa.org/packages/")
-	  ("melpa-stable" . "https://stable.melpa.org/packages/")
-	  ("gnu" . "https://elpa.gnu.org/packages/")))
-  (require 'package)
-  (package-initialize)
-  (setq install-packages
-	'(quelpa
-	  tree-sitter-langs
-	  tree-sitter
-	  typescript-mode
-	  python-mode
-	  anaconda-mode
-	  lsp-haskell
-	  haskell-mode
-	  clojure-mode
-	  yasnippet-snippets
-	  cider
-	  nord-theme))
-  (unless package-archive-contents
-    (package-refresh-contents))
-  (dolist (pkg install-packages)
-    (unless (package-installed-p pkg)
-      (package-install pkg)))
+     (setq package-archives
+           '(("melpa" . "https://melpa.org/packages/")
+             ("melpa-stable" . "https://stable.melpa.org/packages/")
+             ("gnu" . "https://elpa.gnu.org/packages/")))
+     (require 'package)
+     (package-initialize)
+     (setq install-packages
+           '(quelpa
+             tree-sitter-langs
+             tree-sitter
+             typescript-mode
+             python-mode
+             anaconda-mode
+             lsp-haskell
+             haskell-mode
+             clojure-mode
+             yasnippet-snippets
+             cider
+             rust-mode
+             plantuml-mode
+             cider
+             clojure-mode-extra-font-locking
+             nord-theme))
+     (unless package-archive-contents
+       (package-refresh-contents))
+     (dolist (pkg install-packages)
+       (unless (package-installed-p pkg)
+         (package-install pkg)))
 #+END_SRC
 
 
 ** Required Packages
 
 #+BEGIN_SRC emacs-lisp
-  (require 'package)
-  (require 'use-package)
-  (add-to-list 'load-path "~/.emacs.d/lisp/")
-  (require 'tsi)
-  (require 'tsi-css)
-  (require 'tsi-json)
-  (require 'tsi-typescript)
+    (require 'package)
+    (require 'use-package)
+    (add-to-list 'load-path "~/.emacs.d/lisp/")
+    (require 'tsi)
+    (require 'tsi-css)
+    (require 'tsi-json)
+    (require 'tsi-typescript)
+    (require 'tree-sitter)
+    (require 'tree-sitter-langs)
 #+END_SRC
 
 
@@ -93,7 +99,18 @@
    version-control t)       ; use versioned backups
 #+END_SRC
 
+** CTags configuration
+#+BEGIN_SRC emacs-lisp
+  (setq path-to-ctags "c:\\Users\\sardelean\\Tools\\cmd\\ctags.exe")
+  (setq path-to-ctags-out-file "c:\\Users\\sardelean\\AppData\\Roaming\\.emacs.d\\Tags\\TAGS")
 
+  (defun create-tags (dir-name)
+    "Create tags file."
+    (interactive "DDirectory: ")
+    (shell-command 
+     (format "%s -f %s -e -R %s" path-to-ctags path-to-ctags-out-file (directory-file-name dir-name))))
+
+#+END_SRC
 
 ** Yasnippet configuration
 #+BEGIN_SRC emacs-lisp
@@ -121,8 +138,25 @@
 #+begin_src emacs-lisp
   (use-package modern-cpp-font-lock
     :ensure t)
+  (setq-default indent-tabs-mode nil)
+  (setq tab-width 4)
 #+end_src
 
+*** Plantuml mode
+
+#+begin_src emacs-lisp
+  (setq org-plantuml-jar-path (expand-file-name "~/.emacs.d/plantuml.jar"))
+  (with-eval-after-load 'org
+    (org-babel-do-load-languages 'org-babel-load-languages '((ruby . t)
+                                                             (plantuml . t)
+                                                             )))
+#+end_src
+
+*** Rust mode
+#+begin_src emacs-lisp
+  (add-hook 'rust-mode-hook
+            (lambda () (setq indent-tabs-mode nil)))
+#+end_src
 
 *** Haskell Configurations
 #+begin_src emacs-lisp
@@ -179,4 +213,4 @@
     (add-hook 'css-mode-hook (lambda () (tsi-css-mode 1)))
     (add-hook 'scss-mode-hook (lambda () (tsi-scss-mode 1))))
 #+end_src
-
+ 
