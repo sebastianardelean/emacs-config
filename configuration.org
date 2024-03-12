@@ -178,6 +178,14 @@
 #+end_src
 
 
+*** Latex mode
+
+#+begin_src emacs-lisp
+  (setq-default TeX-engine 'xetex)
+  (setq-default TeX-PDF-mode t)
+  (add-hook 'TeX-mode-hook 'prettify-symbols-mode)
+  (add-hook 'TeX-mode-hook 'TeX-fold-mode)
+#+end_src
 
 
 *** Lisp Configurations
