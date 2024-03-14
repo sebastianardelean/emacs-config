@@ -1,6 +1,6 @@
 #+TITLE: Emacs configuration
 
-** Install missing packages
+** Package Archives
 
 #+BEGIN_SRC emacs-lisp
   (setq package-archives
@@ -95,8 +95,8 @@
 
 ** CTags configuration
 #+BEGIN_SRC emacs-lisp
-  (setq path-to-ctags "c:\\Users\\sardelean\\Tools\\cmd\\ctags.exe")
-  (setq path-to-ctags-out-file "c:\\Users\\sardelean\\AppData\\Roaming\\.emacs.d\\Tags\\TAGS")
+  (setq path-to-ctags "D:\\Soft\\cmds\\ctags.exe")
+  (setq path-to-ctags-out-file "c:\\Users\\mihai\\AppData\\Roaming\\.emacs.d\\Tags\\TAGS")
 
   (defun create-tags (dir-name)
     "Create tags file."
@@ -140,8 +140,9 @@
 
 *** C/C++ Configurations
 #+begin_src emacs-lisp
-  (use-package modern-cpp-font-lock
-    :ensure t)
+    (use-package modern-cpp-font-lock
+      :ensure t)
+
   (setq-default indent-tabs-mode nil)
   (setq tab-width 4)
 #+end_src
@@ -188,16 +189,17 @@
 #+end_src
 
 
-*** Lisp Configurations
 
-#+begin_src emacs-lisp
-  (setq inferior-lisp-program "sbcl.exe")
+*** SBCL Configuration
+
+#+BEGIN_SRC emacs-lisp
+  ;;; The SBCL binary and command-line arguments
+  (setq inferior-lisp-program "D:\\Soft\\sbcl\\sbcl.exe --noinform")
   (require 'slime)
   (slime-setup)
-
-#+end_src
-
+#+END_SRC
 
 
 
 
+ 
