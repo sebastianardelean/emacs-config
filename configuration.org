@@ -99,8 +99,8 @@
 
 ** CTags configuration
 #+BEGIN_SRC emacs-lisp
-  (setq path-to-ctags "D:\\Soft\\cmds\\ctags.exe")
-  (setq path-to-ctags-out-file "c:\\Users\\mihai\\AppData\\Roaming\\.emacs.d\\Tags\\TAGS")
+  (setq path-to-ctags "/usr/local/bin/ctags")
+  (setq path-to-ctags-out-file "~/.emacs.d/Tags/TAGS")
 
   (defun create-tags (dir-name)
     "Create tags file."
@@ -204,7 +204,7 @@
 
 #+BEGIN_SRC emacs-lisp
   ;;; The SBCL binary and command-line arguments
-  (setq inferior-lisp-program "D:\\Soft\\sbcl\\sbcl.exe --noinform")
+  (setq inferior-lisp-program "/usr/bin/sbcl --noinform")
   (require 'slime)
   (slime-setup)
 #+END_SRC
