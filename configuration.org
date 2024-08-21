@@ -3,41 +3,66 @@
 ** Install missing packages
 
 #+BEGIN_SRC emacs-lisp
-  (setq package-archives
-	 '(("melpa" . "https://melpa.org/packages/")
-	   ("melpa-stable" . "https://stable.melpa.org/packages/")
-	   ("gnu" . "https://elpa.gnu.org/packages/")
-	   ))
   (require 'package)
+
+
+  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+  (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/"))
+  (add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/"))
+
+  ; Initialize the package system
   (package-initialize)
-  (setq install-packages
-	 '(quelpa
-	   tree-sitter-langs
-	   tree-sitter
-	   python-mode
-	   haskell-mode
-	   clojure-mode
-	   cider
-	   yasnippet-snippets
-	   rust-mode
-	   plantuml-mode
-	   simple-httpd
-	   magit
-	   org-ref-prettify
-	   org-ref
-	   verilog-mode
-	   gnu-elpa-keyring-update
-	   slime
-	   nord-theme
-	   modern-cpp-font-lock
-	   ))
   (unless package-archive-contents
     (package-refresh-contents))
-  (dolist (pkg install-packages)
-    (unless (package-installed-p pkg)
-      (package-install pkg)))
 
+
+  (unless (package-installed-p 'use-package)
+    (package-install 'use-package))
+  (require 'use-package)
+
+
+    (use-package quelpa
+      :ensure t)
+    (use-package tree-sitter-langs
+      :ensure t)
+    (use-package tree-sitter
+      :ensure t)
+    (use-package python-mode
+      :ensure t)
+    (use-package haskell-mode
+      :ensure t)
+    (use-package clojure-mode
+      :ensure t)
+    (use-package cider
+      :ensure t)
+    (use-package yasnippet-snippets
+      :ensure t)
+    (use-package rust-mode
+      :ensure t)
+    (use-package plantuml-mode
+      :ensure t)
+    (use-package simple-httpd
+      :ensure t)
+    (use-package magit
+      :ensure t)
+    (use-package org-ref-prettify
+      :ensure t)
+    (use-package org-ref
+      :ensure t)
+    (use-package verilog-mode
+      :ensure t)
+    (use-package gnu-elpa-keyring-update
+      :ensure t)
+    (use-package slime
+      :ensure t)
+    (use-package nord-theme
+      :ensure t)
+    (use-package modern-cpp-font-lock
+      :ensure t)
+ 
 #+END_SRC
+
+
 
 ** General configurations
 
@@ -61,6 +86,24 @@
    version-control t)       ; use versioned backups
 #+END_SRC
 
+** Org Roam Configuration
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org-roam
+    :ensure t
+    :init
+    (setq org-roam-v2-ack t)
+    :custom
+    (org-roam-directory "~/.emacs.d/org-notes")
+    (org-roam-completion-everywhere t)
+    :bind (("C-c n l" . org-roam-buffer-toggle)
+           ("C-c n f" . org-roam-node-find)
+           ("C-c n i" . org-roam-node-insert)
+           :map org-mode-map
+           ("C-M-i"    . completion-at-point))
+    :config
+    (org-roam-setup))
+#+END_SRC 
 
 ** CTags configuration
 #+BEGIN_SRC emacs-lisp
