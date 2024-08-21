@@ -4,29 +4,33 @@
 
 #+BEGIN_SRC emacs-lisp
   (setq package-archives
-	'(("melpa" . "https://melpa.org/packages/")
-	  ("melpa-stable" . "https://stable.melpa.org/packages/")
-	  ("gnu" . "https://elpa.gnu.org/packages/")))
+	 '(("melpa" . "https://melpa.org/packages/")
+	   ("melpa-stable" . "https://stable.melpa.org/packages/")
+	   ("gnu" . "https://elpa.gnu.org/packages/")
+	   ))
   (require 'package)
   (package-initialize)
   (setq install-packages
-	'(quelpa
-	  tree-sitter-langs
-	  tree-sitter
-	  python-mode
-	  anaconda-mode
-	  lsp-haskell
-	  haskell-mode
-	  clojure-mode
-	  yasnippet-snippets
-	  cider
-	  rust-mode
-	  plantuml-mode
-	  cider
-
-	  clojure-mode-extra-font-locking
-	  rust-mode
-	  simple-httpd))
+	 '(quelpa
+	   tree-sitter-langs
+	   tree-sitter
+	   python-mode
+	   haskell-mode
+	   clojure-mode
+	   cider
+	   yasnippet-snippets
+	   rust-mode
+	   plantuml-mode
+	   simple-httpd
+	   magit
+	   org-ref-prettify
+	   org-ref
+	   verilog-mode
+	   gnu-elpa-keyring-update
+	   slime
+	   nord-theme
+	   modern-cpp-font-lock
+	   ))
   (unless package-archive-contents
     (package-refresh-contents))
   (dolist (pkg install-packages)
@@ -35,67 +39,28 @@
 
 #+END_SRC
 
-
-
-
-** Required Packages
+** General configurations
 
 #+BEGIN_SRC emacs-lisp
-  (require 'package)
-  (require 'use-package)
-  (require 'tree-sitter)
-  (require 'tree-sitter-langs)
-  (require 'rust-mode)
+  (load-theme 'nord t)
+  '(indent-tabs-mode nil)
+  '(menu-bar-mode t)
+  '(tab-always-indent t)
+  '(tool-bar-mode t)
 
-
-  (use-package simple-httpd :ensure t)
-#+END_SRC
-
-
-
-
-
-** Custom Variables
-
-
-*** Generated customizations
-
-#+BEGIN_SRC emacs-lisp
-  (custom-set-variables
-   ;; custom-set-variables was added by Custom.
-   ;; If you edit it by hand, you could mess it up, so be careful.
-   ;; Your init file should contain only one such instance.
-   ;; If there is more than one, they won't work right.
-   '(ansi-color-faces-vector
-     [default default default italic underline success warning error])
-   '(custom-enabled-themes '(nord))
-   '(custom-safe-themes
-     '("37768a79b479684b0756dec7c0fc7652082910c37d8863c35b702db3f16000f8" default))
-   '(indent-tabs-mode nil)
-   '(menu-bar-mode t)
-   '(package-selected-packages
-     '(quelpa tree-sitter-langs tree-sitter typescript-mode python-mode anaconda-mode lsp-haskell haskell-mode clojure-mode yasnippet-snippets nord-theme))
-   '(tab-always-indent t)
-   '(tool-bar-mode t)
-   '(warning-suppress-types '((comp) (comp) (comp) (comp))))
-  (custom-set-faces
-   ;; custom-set-faces was added by Custom.
-   ;; If you edit it by hand, you could mess it up, so be careful.
-   ;; Your init file should contain only one such instance.
-   ;; If there is more than one, they won't work right.
-   )
   (when (version<= "26.0.50" emacs-version)
     (global-display-line-numbers-mode))
   ;; Backup directory-file-name
   (setq
    backup-by-copying t      ; don't clobber symlinks
    backup-directory-alist
-   '(("." . "~/Temp/backup/"))    ; don't litter my fs tree
+   '(("." . "~/.emacs.d/backups/"))    ; don't litter my fs tree
    delete-old-versions t
    kept-new-versions 6
    kept-old-versions 2
    version-control t)       ; use versioned backups
 #+END_SRC
+
 
 ** CTags configuration
 #+BEGIN_SRC emacs-lisp
@@ -126,7 +91,6 @@
   (setf url-queue-timeout 30)
 #+end_src
 
-
 ** Autocomplete
 
 #+begin_src emacs-lisp
@@ -139,13 +103,10 @@
       ))  
 #+end_src
 
-
 ** Programming Languages
 
 *** C/C++ Configurations
 #+begin_src emacs-lisp
-  (use-package modern-cpp-font-lock
-    :ensure t)
   (setq-default indent-tabs-mode nil)
   (setq tab-width 4)
   (setq c-default-style "bsd"
@@ -208,8 +169,3 @@
   (require 'slime)
   (slime-setup)
 #+END_SRC
-
-
-
-
- 
