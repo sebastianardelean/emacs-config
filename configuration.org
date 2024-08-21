@@ -1,31 +1,32 @@
 #+TITLE: Emacs configuration
 
-** Package Archives
+** Install missing packages
 
 #+BEGIN_SRC emacs-lisp
   (setq package-archives
-        '(("melpa" . "https://melpa.org/packages/")
-          ("melpa-stable" . "https://stable.melpa.org/packages/")
-          ("gnu" . "https://elpa.gnu.org/packages/")))
+	'(("melpa" . "https://melpa.org/packages/")
+	  ("melpa-stable" . "https://stable.melpa.org/packages/")
+	  ("gnu" . "https://elpa.gnu.org/packages/")))
   (require 'package)
   (package-initialize)
   (setq install-packages
-        '(quelpa
-          tree-sitter-langs
-          tree-sitter
-          python-mode
-          anaconda-mode
-          lsp-haskell
-          haskell-mode
-          clojure-mode
-          yasnippet-snippets
-          cider
-          rust-mode
-          plantuml-mode
-          cider
-          clojure-mode-extra-font-locking
-          nord-theme
-          rust-mode))
+	'(quelpa
+	  tree-sitter-langs
+	  tree-sitter
+	  python-mode
+	  anaconda-mode
+	  lsp-haskell
+	  haskell-mode
+	  clojure-mode
+	  yasnippet-snippets
+	  cider
+	  rust-mode
+	  plantuml-mode
+	  cider
+
+	  clojure-mode-extra-font-locking
+	  rust-mode
+	  simple-httpd))
   (unless package-archive-contents
     (package-refresh-contents))
   (dolist (pkg install-packages)
@@ -45,6 +46,9 @@
   (require 'tree-sitter)
   (require 'tree-sitter-langs)
   (require 'rust-mode)
+
+
+  (use-package simple-httpd :ensure t)
 #+END_SRC
 
 
@@ -140,11 +144,13 @@
 
 *** C/C++ Configurations
 #+begin_src emacs-lisp
-    (use-package modern-cpp-font-lock
-      :ensure t)
-
+  (use-package modern-cpp-font-lock
+    :ensure t)
   (setq-default indent-tabs-mode nil)
   (setq tab-width 4)
+  (setq c-default-style "bsd"
+        c-basic-offset 4)
+
 #+end_src
 
 *** Plantuml mode
@@ -155,6 +161,10 @@
     (org-babel-do-load-languages 'org-babel-load-languages '((ruby . t)
                                                              (plantuml . t)
                                                              )))
+  (add-hook 'org-babel-after-execute-hook
+            (lambda ()
+              (when org-inline-image-overlays
+                (org-redisplay-inline-images))))
 #+end_src
 
 *** Rust mode
@@ -184,8 +194,8 @@
 #+begin_src emacs-lisp
   (setq-default TeX-engine 'xetex)
   (setq-default TeX-PDF-mode t)
-  (add-hook 'TeX-mode-hook 'prettify-symbols-mode)
-  (add-hook 'TeX-mode-hook 'TeX-fold-mode)
+   (add-hook 'TeX-mode-hook 'prettify-symbols-mode)
+    (add-hook 'TeX-mode-hook 'TeX-fold-mode)
 #+end_src
 
 
